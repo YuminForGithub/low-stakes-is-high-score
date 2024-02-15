@@ -1,11 +1,12 @@
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     sprite.sayText("Yummy!", 1000, false)
     sprites.destroy(otherSprite, effects.fountain, 500)
-    statusbar.value += 30
+    statusbar.value += 50
     info.changeScoreBy(1)
 })
 let food2: Sprite = null
 let statusbar: StatusBarSprite = null
+game.setGameOverScoringType(game.ScoringType.LowScore)
 let food1 = sprites.create(img`
     . . . . . . 2 2 2 2 . . . . . . 
     . . . . 2 2 3 3 3 3 2 e . . . . 
@@ -63,7 +64,8 @@ let mySprite = sprites.create(img`
 statusbar = statusbars.create(70, 4, StatusBarKind.Energy)
 statusbar.attachToSprite(mySprite)
 statusbar.setLabel("Energy", 6)
-statusbar.max = 100
+statusbar.max = 1000
+statusbar.value = 1000
 mySprite.setPosition(0, 50)
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -210,16 +212,16 @@ for (let index = 0; index <= randint(10, screen.width * 10); index++) {
         . . e 3 3 3 3 3 3 b e e e e . . 
         . . . e e e e e e e e e e . . . 
         `, SpriteKind.Food)
-    food1.setPosition(Math.random() * 1000 + 20, (screen.height - 10) * Math.random())
-    food2.setPosition(Math.random() * 1000 + 20, (screen.height - 10) * Math.random())
-    BadGuy.setPosition(Math.random() * 1000 + 20, (screen.height - 10) * Math.random())
+    food1.setPosition(Math.random() * 3000 + 20, (screen.height - 10) * Math.random())
+    food2.setPosition(Math.random() * 3000 + 20, (screen.height - 10) * Math.random())
+    BadGuy.setPosition(Math.random() * 3000 + 20, (screen.height - 10) * Math.random())
 }
-game.setGameOverScoringType(game.ScoringType.LowScore)
-carnival.startCountdownGame(30, carnival.WinTypes.Win)
+carnival.startCountdownGame(90, carnival.WinTypes.Win, effects.confetti)
 forever(function () {
-    statusbar.value += -0.7
+    statusbar.value += -1.75
     if (statusbar.value == 0) {
-        game.setGameOverScoringType(game.ScoringType.HighScore)
-        carnival.onGameOverExpanded(carnival.WinTypes.Lose)
+        game.setGameOverScoringType(game.ScoringType.LowScore)
+        carnival.onGameOverExpanded(carnival.WinTypes.Win, effects.dissolve)
     }
+    console.logValue("Energy", statusbar.value)
 })
